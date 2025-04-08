@@ -2,7 +2,8 @@
 <!-- JavaScript (Logic) -->
 <!-- setup composition api script setup -->
 <script setup>
-import { reactive, ref } from "vue";
+import { reactive, ref, computed } from "vue";
+import Detyra1 from "@/components/detyra/Detyra1.vue";
 
 // Ref e bon ni variabel reaktive
 const message = ref("Hello from Vue"); // { value: "Hello from Vue" }
@@ -74,6 +75,49 @@ const user = reactive({
 });
 
 // user.id
+
+// computed property
+const author = reactive({
+  name: "John Doe",
+  books: [
+    { title: "Book 1", year: 2020 },
+    { title: "Book 2", year: 2021 },
+  ],
+});
+
+const hasPublishedBooks = computed(() => {
+  return author.books.length > 0 ? "Yes" : "No";
+});
+
+const randomTextComputed = computed(() => {
+  return Math.random() > 0.5 ? "Drink coffe" : "Go to gym";
+});
+
+// class and style binding
+const isActive = ref(true);
+const hasError = ref(false);
+const classObject = reactive({
+  active: true,
+  "text-danger": false,
+});
+
+const isCompleted = ref(false);
+const classObjComputed = computed(() => {
+  return {
+    completed: isCompleted.value,
+    // completed: isCompleted.value === true,
+    "text-danger": !isCompleted.value, // && hasError.value,
+    // "text-danger": isCompleted.value === false,
+  };
+});
+
+// style binding
+const redColor = ref("red");
+const upperCase = ref("uppercase");
+const styleObject = reactive({
+  color: "indigo",
+  textTransform: "uppercase",
+});
 </script>
 
 <!-- HTML (Structure) -->
@@ -131,8 +175,39 @@ const user = reactive({
   <p>User id: {{ user.id }}</p>
   <p>Name: {{ user.name }}</p>
   <p>Age: {{ user.age }}</p>
+
+  <!-- Computed -->
+  <!-- <p>Has published books: {{ author.books.length > 0 ? "Yes" : "No" }}</p> -->
+  <p>Has published books: {{ hasPublishedBooks }}</p>
+  <p>Random text computed: {{ randomTextComputed }}</p>
+
+  <!-- Class and style binding -->
+  <!-- 'active' klasa ne css, 'isActive' varibla ne script -->
+  <p class="some-class" :class="{ active: isActive, 'text-danger': hasError }">Class bindig</p>
+  <p :class="classObject">Class object</p>
+  <p :class="classObjComputed">Computed class object</p>
+  <button @click="isCompleted = !isCompleted">Toggle completed</button>
+  <!-- <p :class="['active', 'other-class']">Binding to array</p> -->
+  <p :class="['active', isCompleted ? 'completed' : '']">Binding to array</p>
+  <p :style="{ color: redColor, textTransform: upperCase }">Style binding</p>
+  <p :style="styleObject">Style object</p>
+
+  <Detyra1 />
 </template>
 
 <!-- CSS (Style) -->
 <!-- CSS aplikohet vetem ne kete file -->
-<style scoped></style>
+<style scoped>
+.active {
+  font-weight: bold;
+}
+
+.text-danger {
+  color: red;
+}
+
+.completed {
+  text-decoration: line-through;
+  color: green;
+}
+</style>
