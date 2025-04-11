@@ -118,6 +118,45 @@ const styleObject = reactive({
   color: "indigo",
   textTransform: "uppercase",
 });
+
+// conditional rendering
+const awesome = ref(true);
+const type = ref("C");
+
+// Input binding
+const userInput = ref("");
+const onUserInput = (e) => {
+  userInput.value = e.target.value; // e.target.value
+};
+
+// Todo List
+let todoId = 1;
+const newTodo = ref("");
+const todos = ref([
+  { id: todoId++, text: "Todo 1" },
+  { id: todoId++, text: "Todo 2" },
+]);
+
+const addTodo = () => {
+  // if (newTodo.value.trim() === "") {
+  //   alert("Please enter a todo");
+  //   return;
+  // }
+
+  // "" => false => !false = true
+  // newTodo.value === "" || newTodo.value === null || newTodo.value === undefined
+  if (!newTodo.value) {
+    alert("Please enter a todo");
+    return;
+  }
+
+  todos.value.push({
+    id: todoId++,
+    text: newTodo.value,
+  });
+
+  newTodo.value = ""; // Clear the input field
+};
 </script>
 
 <!-- HTML (Structure) -->
@@ -193,6 +232,61 @@ const styleObject = reactive({
   <p :style="styleObject">Style object</p>
 
   <Detyra1 />
+
+  <!-- Conditional rendering -->
+  <!-- 
+    if (true) {
+    } else {
+    }
+  -->
+  <p v-if="awesome">Vue is awesome</p>
+  <!-- <span></span> error nese ka ndonje tag tjeter ne mes v-if dhe v-else -->
+  <p v-else>Oh nooo 😒</p>
+  <button @click="awesome = !awesome">Toggle</button>
+
+  <p v-if="type === 'A'">A</p>
+  <!-- <p v-else></p> -->
+  <p v-else-if="type === 'B'">B</p>
+  <p v-else>Not A/B</p>
+
+  <!-- Template per grupim te elementeve te html nuk renderohet ne dom -->
+  <template v-if="true">
+    <h1>Template</h1>
+    <p>Test p</p>
+  </template>
+
+  <p v-show="awesome">V-show</p>
+
+  <!-- List rendering -->
+  <h3>Author: {{ author.name }}</h3>
+  <p>Books:</p>
+  <ul v-if="author.books.length > 0">
+    <!-- <li v-for="(book, index) in author.books">{{ index }} - {{ book.title }} ({{ book.year }})</li> -->
+    <!-- <li v-for="({ title, year }, index) in author.books">{{ index }} - {{ title }} ({{ year }})</li> -->
+    <!-- :key duhet me qene unike -->
+    <template v-for="({ title, year }, index) in author.books" :key="index">
+      <li>{{ index }} - {{ title }} ({{ year }})</li>
+    </template>
+  </ul>
+  <p v-else>No published books</p>
+
+  <!-- Input binding -->
+  <p>Input binding</p>
+  <!-- <input type="text" :value="userInput" @input="onUserInput" />
+  <p>User input: {{ userInput }}</p> -->
+
+  <input type="text" v-model="userInput" />
+  <p>User input: {{ userInput }}</p>
+
+  <!-- Todo List -->
+  <h3>Todo List</h3>
+  <input type="text" v-model.trim="newTodo" placeholder="Add new todo" @keyup.enter="addTodo" />
+  <button @click="addTodo">+ Add</button>
+
+  <ul v-if="todos.length">
+    <li v-for="todo in todos" :key="todo.id">({{ todo.id }}): {{ todo.text }}</li>
+  </ul>
+  <p v-else>No todos</p>
 </template>
 
 <!-- CSS (Style) -->
