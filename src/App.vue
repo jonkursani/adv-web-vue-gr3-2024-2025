@@ -133,8 +133,8 @@ const onUserInput = (e) => {
 let todoId = 1;
 const newTodo = ref("");
 const todos = ref([
-  { id: todoId++, text: "Todo 1" },
-  { id: todoId++, text: "Todo 2" },
+  { id: todoId++, text: "Todo 1", completed: true },
+  { id: todoId++, text: "Todo 2", completed: false },
 ]);
 
 const addTodo = () => {
@@ -153,10 +153,49 @@ const addTodo = () => {
   todos.value.push({
     id: todoId++,
     text: newTodo.value,
+    completed: false,
   });
 
   newTodo.value = ""; // Clear the input field
 };
+
+const removeTodo = (id) => {
+  // const index = todos.value.findIndex((todo) => todo.id === id);
+
+  todos.value = todos.value.filter((todo) => todo.id !== id);
+};
+
+const hideCompleted = ref(false);
+const filteredTodos = computed(() => {
+  // if (hideCompleted.value) {
+  //   return todos.value.filter((todo) => !todo.completed);
+  // } else {
+  //   return todos.value;
+  // }
+
+  // nese hideCompleted === true ateher renderoj vetem todos qe nuk jon completed
+  return hideCompleted.value ? todos.value.filter((todo) => !todo.completed) : todos.value;
+});
+
+// Form input bindings
+const text = ref("");
+const textArea = ref("");
+const checked = ref(false);
+const checkedNames = ref(["Jack"]);
+const picked = ref("One");
+const selected = ref("");
+const options = ref([
+  { val: "a", text: "A" },
+  { val: "b", text: "B" },
+  { val: "c", text: "C" },
+]);
+
+const pickOptions = reactive({
+  one: "One",
+  two: "Two",
+});
+
+const number = ref(0);
 </script>
 
 <!-- HTML (Structure) -->
@@ -271,6 +310,7 @@ const addTodo = () => {
   <p v-else>No published books</p>
 
   <!-- Input binding -->
+  <!-- Two way data binding -->
   <p>Input binding</p>
   <!-- <input type="text" :value="userInput" @input="onUserInput" />
   <p>User input: {{ userInput }}</p> -->
@@ -284,9 +324,94 @@ const addTodo = () => {
   <button @click="addTodo">+ Add</button>
 
   <ul v-if="todos.length">
-    <li v-for="todo in todos" :key="todo.id">({{ todo.id }}): {{ todo.text }}</li>
+    <li v-for="todo in filteredTodos" :key="todo.id">
+      <input type="checkbox" v-model="todo.completed" />
+      <span :class="{ completed: todo.completed }">({{ todo.id }}): {{ todo.text }}</span>
+      <button @click="removeTodo(todo.id)">X</button>
+    </li>
   </ul>
   <p v-else>No todos</p>
+
+  <button @click="hideCompleted = !hideCompleted">
+    {{ hideCompleted ? "Show all" : "Hide completed" }}
+  </button>
+
+  <!-- Form input bindings -->
+  <h3>Form input bindings</h3>
+
+  <h4>Text</h4>
+  <input type="text" v-model="text" />
+  <p>Text: {{ text }}</p>
+
+  <h4>Text Area</h4>
+  <textarea v-model="textArea"></textarea>
+  <p>Text area: {{ textArea }}</p>
+
+  <h4>Checkbox</h4>
+  <input type="checkbox" v-model="checked" id="chk" />
+  <label for="chk">Checked</label>
+  <p>Checked: {{ checked }}</p>
+
+  <h4>Check names</h4>
+  <!-- Cka ruhet ne value mapohet ne variabel si item ne array -->
+  <input type="checkbox" id="jack" value="Jack" v-model="checkedNames" />
+  <label for="jack">Jack</label>
+
+  <input type="checkbox" id="jill" value="Jill" v-model="checkedNames" />
+  <label for="jill">Jill</label>
+
+  <input type="checkbox" id="jane" value="Jane" v-model="checkedNames" />
+  <label for="jane">Jane</label>
+
+  <p>Checked names: {{ checkedNames }}</p>
+
+  <h4>Radio</h4>
+  <!-- <input type="radio" id="one" value="One" v-model="picked" /> -->
+  <input type="radio" id="one" :value="pickOptions.one" v-model="picked" />
+  <label for="one">One</label>
+
+  <!-- <input type="radio" id="two" value="Two" v-model="picked" /> -->
+  <input type="radio" id="two" :value="pickOptions.two" v-model="picked" />
+
+  <label for="two">Two</label>
+
+  <p>Picked: {{ picked }}</p>
+
+  <h4>Select</h4>
+  <!-- <select v-model="selected">
+    <option disabled value="">Please select one</option>
+    <option value="a">A</option>
+    <option value="b">B</option>
+  </select> -->
+
+  <select v-model="selected">
+    <option disabled value="">Please select one</option>
+    <option v-for="(o, i) in options" :key="i" :value="o.val">{{ o.text }}</option>
+  </select>
+
+  <p>Selected: {{ selected }}</p>
+
+  <h4>Trim/Number modifier</h4>
+  <input type="text" v-model.trim="text" />
+  <input type="number" v-model.number="number" />
+  <p>Text: {{ text }}</p>
+  <p>Number: {{ number }}</p>
+
+  <!-- 
+    Krijo formen per personin me 
+    emer - text, 
+    mbiemer - text, 
+    moshe - number, 
+    gjini - radio, 
+    hoby - checkbox, 
+    a eshte student - checkbox,
+    drejtimi - select
+
+    Validoni inputat a kane vlere pastaj 
+    ruaje ne nje array te personave.
+
+    Array te personave shfaqeni ne nje tabele v-for
+  -->
 </template>
 
 <!-- CSS (Style) -->
