@@ -1,6 +1,11 @@
-import './assets/main.css'
+import "./assets/main.css";
 
-import { createApp } from 'vue'
-import App from './App.vue'
+import { createApp } from "vue";
+import App from "./App.vue";
+import ChildComp from "@/components/ChildComp.vue";
 
-createApp(App).mount('#app')
+createApp(App)
+  // importi global i komponentit ChildComp
+  // emri ne html eshte parametri i pare, parametri i dyte eshte komponenti
+  // .component("ChildComp", ChildComp)
+  .mount("#app");

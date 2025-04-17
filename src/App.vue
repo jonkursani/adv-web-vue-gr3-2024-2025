@@ -4,6 +4,8 @@
 <script setup>
 import { reactive, ref, computed } from "vue";
 import Detyra1 from "@/components/detyra/Detyra1.vue";
+// importi local i komponentit
+import ChildComp from "@/components/ChildComp.vue";
 
 // Ref e bon ni variabel reaktive
 const message = ref("Hello from Vue"); // { value: "Hello from Vue" }
@@ -196,6 +198,14 @@ const pickOptions = reactive({
 });
 
 const number = ref(0);
+
+// Components
+// emit("childEvent", "Hello from child component");
+// parametri i dyte i metodes emit bohet bind ne parametrin e metodes qe e keni definu
+// emri i parametrit nuk ka rendesi
+const handleChildEvent = (message) => {
+  alert(message);
+};
 </script>
 
 <!-- HTML (Structure) -->
@@ -412,6 +422,22 @@ const number = ref(0);
 
     Array te personave shfaqeni ne nje tabele v-for
   -->
+
+  <h2>Components</h2>
+  <!-- <ChildComp /> -->
+  <!-- <child-comp name="John" age="30" /> -->
+  <!-- <child-comp name="John" :age="30" /> -->
+  <!-- <child-comp :user="{ name: 'John', age: 30 }" @childEvent="handleChildEvent" /> -->
+  <child-comp :user="user" @child-event="handleChildEvent" />
+  <child-comp :user="{ name: 'John', age: 30 }" @child-event="handleChildEvent" />
+
+  <!-- 
+    Te dhenat prej detyres paraprake me i vendos ne komponente
+    ku si prop e pranon objektin reaktiv ekzistues me te dhenat e userit edhe i shfaq te dhenat
+
+    Mrena comp child ni button qe e kthen vleren e emrit mbiemrit
+    Prap te komponenta prind edhe e shfaq ne paragraf tjeter
+   -->
 </template>
 
 <!-- CSS (Style) -->
