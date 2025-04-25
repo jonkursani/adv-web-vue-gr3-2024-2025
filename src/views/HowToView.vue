@@ -7,6 +7,8 @@ import Detyra1 from "@/components/detyra/Detyra1.vue";
 // importi local i komponentit
 import ChildComp from "@/components/ChildComp.vue";
 import TodoList from "@/components/todos/TodoList.vue";
+import { useRouter } from "vue-router";
+import { useCounterStore } from "@/stores/counterStore";
 
 // Ref e bon ni variabel reaktive
 const message = ref("Hello from Vue"); // { value: "Hello from Vue" }
@@ -207,6 +209,18 @@ const number = ref(0);
 const handleChildEvent = (message) => {
   alert(message);
 };
+
+// Router
+// const {push} = useRouter();
+const router = useRouter();
+
+const goToUser = (id) => {
+  // router.push(`/user/${id}`); // nese navigoni me path
+  router.push({ name: "user", params: { id: id } }); // nese navigoni me name
+};
+
+// Store
+const store = useCounterStore();
 </script>
 
 <!-- HTML (Structure) -->
@@ -428,6 +442,24 @@ const handleChildEvent = (message) => {
   <router-link to="/about">With to: About</router-link>
   <br />
   <router-link :to="{ name: 'about' }">With name: About</router-link>
+  <br />
+  <router-link to="/user/1">User 1</router-link>
+  <br />
+  <router-link :to="{ name: 'user', params: { id: 2 } }">User 2</router-link>
+  <br />
+  <button @click="goToUser(3)">Edit user 3</button>
+
+  <h3>Store</h3>
+  <p>Counter: {{ store.count }}</p>
+
+  <!-- 
+       PeopleView (buton qe bon delete personin prej array-it ne store)
+       AddPersonView (shton pernonin e ri ne array)
+       UpdatePersonView (kerko personin me id qe vjen prej url) 
+
+       Definojeni nje store te ri usePeopleStore, 
+       array-in e personave e ruani ne store
+   -->
 </template>
 
 <!-- CSS (Style) -->
