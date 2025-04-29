@@ -436,7 +436,9 @@ const store = useCounterStore();
     Prap te komponenta prind edhe e shfaq ne paragraf tjeter
    -->
 
-  <todo-list />
+  <!-- <todo-list /> -->
+  <br />
+  <router-link :to="{ name: 'todos' }">Go To Todo List</router-link>
 
   <h3>Router</h3>
   <router-link to="/about">With to: About</router-link>

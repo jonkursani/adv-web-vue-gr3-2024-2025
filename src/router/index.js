@@ -1,3 +1,6 @@
+import AddTodo from "@/components/todos/AddTodo.vue";
+import TodoList from "@/components/todos/TodoList.vue";
+import UpdateTodo from "@/components/todos/UpdateTodo.vue";
 import AboutView from "@/views/AboutView.vue";
 import HowToView from "@/views/HowToView.vue";
 import NotFoundView from "@/views/NotFoundView.vue";
@@ -23,6 +26,21 @@ const routes = [
     path: "/user/:id",
     name: "user",
     component: UserView,
+  },
+  {
+    path: "/todos",
+    name: "todos",
+    component: TodoList,
+  },
+  {
+    path: "/todos/add",
+    name: "add-todo",
+    component: AddTodo,
+  },
+  {
+    path: "/todos/:id",
+    name: "update-todo",
+    component: UpdateTodo,
   },
   // catch-all route
   {
