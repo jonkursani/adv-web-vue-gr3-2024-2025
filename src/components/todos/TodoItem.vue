@@ -30,8 +30,8 @@ const goToUpdateTodo = (id) => {
     <!-- <input type="checkbox" :checked="todo.completed" @change="onToggleTodo(todo.id)" /> -->
     <input type="checkbox" v-model="todo.completed" />
     <span :class="{ completed: todo.completed }">({{ todo.id }}): {{ todo.text }}</span>
-    <button @click="goToUpdateTodo(todo.id)">🖋️</button>
-    <button @click="onRemoveTodo(todo.id)">❌</button>
+    <button class="btn btn-outline-primary" @click="goToUpdateTodo(todo.id)">🖋️</button>
+    <button class="btn btn-outline-danger" @click="onRemoveTodo(todo.id)">❌</button>
   </li>
 </template>
 
