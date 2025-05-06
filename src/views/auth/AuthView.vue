@@ -1,31 +1,44 @@
 <script setup>
-import {reactive} from "vue";
+import {reactive, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {useAuthStore} from "@/stores/authStore.js";
+import {useAppToast} from "@/composables/useAppToast.js";
+import AppButton from "@/components/ui/AppButton.vue";
 
 const router = useRouter()
 const route = useRoute()
 const authStore = useAuthStore()
+const isLoading = ref(false);
 
 const user = reactive({
   email: '',
   password: ''
 })
 
+
+const toast = useAppToast()
+// const {showSuccess, showError} = useAppToast()
+
 const handleSubmit = async () => {
   if (!user.email || !user.password) {
-    alert('Please fill in all fields');
+    // alert('Please fill in all fields');
+    toast.showWarning('Please fill in all fields')
     return;
   }
 
   try {
+    isLoading.value = true;
     await authStore.logIn(user);
     const redirect = `${route.query.redirect || '/'}`
     await router.push(redirect)
-  }
-  catch (e) {
-    console.log(e)
-    alert(e.response.data?.message || 'An error occurred')
+  } catch (e) {
+    // console.log(e)
+    // alert(e.response.data?.message || 'An error occurred')
+    // error i axios
+    // toast.showError(e.response?.data?.message || 'An error occurred')
+    throw e;
+  } finally {
+    isLoading.value = false
   }
 }
 </script>
@@ -49,13 +62,17 @@ const handleSubmit = async () => {
               </div>
             </div>
             <div class="form-group position-relative has-icon-left mb-4">
-              <input type="password" class="form-control form-control-xl" placeholder="Password" v-model.trim="user.password">
+              <input type="password" class="form-control form-control-xl" placeholder="Password"
+                     v-model.trim="user.password">
               <div class="form-control-icon">
                 <i class="bi bi-shield-lock"></i>
               </div>
             </div>
 
-            <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Log in</button>
+            <!--  class bohet bind ne attributin attrs -->
+            <app-button :is-loading="isLoading" class="btn btn-primary btn-block btn-lg shadow-lg mt-5">
+              Log in
+            </app-button>
           </form>
           <div class="text-center mt-5 text-lg fs-4">
             <p class="text-gray-600">Don't have an account? <a href="auth-register.html" class="font-bold">Sign
