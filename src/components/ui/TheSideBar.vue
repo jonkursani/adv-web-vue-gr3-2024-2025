@@ -1,8 +1,8 @@
 <script setup>
-import { initSidebar } from "@/assets/sidebar.js";
+import {initSidebar} from "@/assets/sidebar.js";
 import PerfectScrollbar from "perfect-scrollbar";
-import { onMounted } from "vue";
-import { useRoute } from "vue-router";
+import {onMounted} from "vue";
+import {useRoute} from "vue-router";
 
 onMounted(() => {
   const sidebar = document.querySelector(".sidebar");
@@ -41,6 +41,13 @@ const isActive = (routeName) => {
             <router-link to="/" class="sidebar-link">
               <i class="bi bi-grid-fill"></i>
               <span>Dashboard</span>
+            </router-link>
+          </li>
+
+          <li class="sidebar-item" :class="isActive('departments')">
+            <router-link :to="{name: 'departments'}" class="sidebar-link">
+              <i class="bi bi-building"></i>
+              <span>Departments</span>
             </router-link>
           </li>
 

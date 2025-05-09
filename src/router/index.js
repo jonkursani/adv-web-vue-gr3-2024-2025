@@ -8,6 +8,8 @@ import UserView from "@/views/UserView.vue";
 import {createRouter, createWebHistory} from "vue-router";
 import AuthView from "@/views/auth/AuthView.vue";
 import {useAuthStore} from "@/stores/authStore.js";
+import DepartmentRoutes from "@/router/departmentRoutes.js";
+import TodoRoutes from "@/router/todoRoutes.js";
 
 const routes = [
     {
@@ -46,30 +48,9 @@ const routes = [
             requiresAuth: true
         }
     },
-    {
-        path: "/todos",
-        name: "todos",
-        component: TodoList,
-        meta: {
-            requiresAuth: true
-        }
-    },
-    {
-        path: "/todos/add",
-        name: "add-todo",
-        component: AddTodo,
-        meta: {
-            requiresAuth: true
-        }
-    },
-    {
-        path: "/todos/:id",
-        name: "update-todo",
-        component: UpdateTodo,
-        meta: {
-            requiresAuth: true
-        }
-    },
+    // (...) spread operator na ndihmon mi ekstraktu objektet prej array-it
+    ...TodoRoutes,
+    ...DepartmentRoutes,
     // catch-all route
     {
         path: "/:notFound(.*)",

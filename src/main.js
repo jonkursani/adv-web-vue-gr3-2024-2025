@@ -1,6 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import "./assets/app.css";
 import "./assets/main.css";
 

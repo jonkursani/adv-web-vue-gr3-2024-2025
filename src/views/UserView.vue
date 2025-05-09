@@ -31,4 +31,6 @@ const store = useCounterStore();
   <p>Counter: {{ store.count }}</p>
   <p>Double counter: {{ store.doubleCount }}</p>
   <button @click="store.increment">Increment</button>
+
+
 </template>
