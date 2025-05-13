@@ -8,6 +8,7 @@ import DataTablesCore from 'datatables.net';
 import DataTablesBS5 from 'datatables.net-bs5';
 import AppSpinner from "@/components/AppSpinner.vue";
 import AppButton from "@/components/ui/AppButton.vue";
+import {useAppToast} from "@/composables/useAppToast.js";
 
 // Initialize DataTables with Bootstrap 5 styles
 DataTable.use(DataTablesCore);
@@ -33,6 +34,19 @@ const loadDepartments = async () => {
   // }
 }
 
+const {showSuccess} = useAppToast()
+const onDeleteDepartment = async (id) => {
+  if (confirm('Are you sure you want to delete this department?')) {
+    await withLoading(async () => {
+      const response = await DepartmentService.deleteDepartment(id)
+      if (response) {
+        showSuccess('Department deleted successfully')
+        await loadDepartments()
+      }
+    })
+  }
+}
+
 onMounted(async () => {
   await loadDepartments()
   new DataTablesCore('#departments')
@@ -42,11 +56,14 @@ onMounted(async () => {
 <template>
   <app-card>
     <template #header>
-      <h5>Departments</h5>
+      <div class="d-flex justify-content-between">
+        <h5>Departments</h5>
+        <router-link :to="{ name: 'create-department' }" class="btn btn-primary">Add</router-link>
+      </div>
     </template>
 
     <div class="text-center" v-if="isLoading">
-<!--      Loading...-->
+      <!--      Loading...-->
       <app-spinner :is-loading="isLoading"/>
     </div>
     <table v-else id="departments" class="table table-striped table-bordered">
@@ -64,8 +81,10 @@ onMounted(async () => {
         <td>{{ dep.name }}</td>
         <td>{{ dep.location }}</td>
         <td>
-          <router-link to="" class="btn btn-secondary">Update</router-link>
-          <app-button class="btn btn-danger ms-2">Delete</app-button>
+          <router-link :to="{name: 'update-department', params: {id: dep.id}}" class="btn btn-secondary">
+            Update
+          </router-link>
+          <app-button class="btn btn-danger ms-2" @click="onDeleteDepartment(dep.id)">Delete</app-button>
         </td>
       </tr>
       </tbody>
