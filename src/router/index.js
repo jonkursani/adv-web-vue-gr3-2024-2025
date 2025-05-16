@@ -1,6 +1,3 @@
-import AddTodo from "@/components/todos/AddTodo.vue";
-import TodoList from "@/components/todos/TodoList.vue";
-import UpdateTodo from "@/components/todos/UpdateTodo.vue";
 import AboutView from "@/views/AboutView.vue";
 import HowToView from "@/views/HowToView.vue";
 import NotFoundView from "@/views/NotFoundView.vue";
@@ -10,6 +7,7 @@ import AuthView from "@/views/auth/AuthView.vue";
 import {useAuthStore} from "@/stores/authStore.js";
 import DepartmentRoutes from "@/router/departmentRoutes.js";
 import TodoRoutes from "@/router/todoRoutes.js";
+import EmployeeRoutes from "@/router/employeeRoutes.js";
 
 const routes = [
     {
@@ -51,6 +49,7 @@ const routes = [
     // (...) spread operator na ndihmon mi ekstraktu objektet prej array-it
     ...TodoRoutes,
     ...DepartmentRoutes,
+    ...EmployeeRoutes,
     // catch-all route
     {
         path: "/:notFound(.*)",

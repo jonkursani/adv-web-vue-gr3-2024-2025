@@ -51,6 +51,13 @@ const isActive = (routeName) => {
             </router-link>
           </li>
 
+          <li class="sidebar-item" :class="isActive('employees')">
+            <router-link :to="{name: 'employees'}" class="sidebar-link">
+              <i class="bi bi-people-fill"></i>
+              <span>Employees</span>
+            </router-link>
+          </li>
+
           <li class="sidebar-item has-sub">
             <a href="#" class="sidebar-link">
               <i class="bi bi-stack"></i>
