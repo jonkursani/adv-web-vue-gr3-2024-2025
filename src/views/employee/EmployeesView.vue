@@ -55,7 +55,10 @@ onMounted(async () => {
 <template>
   <app-card>
     <template #header>
-      <h5>Employees</h5>
+      <div class="d-flex justify-content-between">
+        <h5>Employees</h5>
+        <router-link :to="{name: 'create-employee'}" class="btn btn-primary">Add</router-link>
+      </div>
     </template>
 
     <div class="text-center" v-if="isLoading">
@@ -90,10 +93,10 @@ onMounted(async () => {
     <!--    </table>-->
     <app-datatable v-else id="employees" :rows="employees" :columns="columns" has-actions>
       <!-- Template renderohet te sloti me emrin actions -->
-<!--      <template #actions="variabla">-->
+      <!--      <template #actions="variabla">-->
       <template #actions="{rreshti}">
         <router-link to="" class="btn btn-secondary">Update</router-link>
-<!--        <app-button class="btn btn-danger ms-2" @click="() => console.log(variabla.rreshti)">Delete</app-button>-->
+        <!--        <app-button class="btn btn-danger ms-2" @click="() => console.log(variabla.rreshti)">Delete</app-button>-->
         <app-button class="btn btn-danger ms-2" @click="() => console.log(rreshti.id)">Delete</app-button>
       </template>
     </app-datatable>
