@@ -6,8 +6,9 @@ import {useDepartmentStore} from "@/stores/departmentStore.js";
 import AppButton from "@/components/ui/AppButton.vue";
 import EmployeeService from "@/services/employeeService.js";
 import {useAppToast} from "@/composables/useAppToast.js";
-import {useRouter} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import AppSelect from "@/components/ui/AppSelect.vue";
+import AppSpinner from "@/components/AppSpinner.vue";
 
 const isLoading = ref(false)
 const formData = reactive({
@@ -62,9 +63,9 @@ const handleSubmit = async () => {
 
   try {
     isLoading.value = true
-    const response = await EmployeeService.createEmployee(obj)
+    const response = await EmployeeService.updateEmployee(employeeId, obj)
     if (response) {
-      showSuccess('Employee created successfully')
+      showSuccess('Employee updated successfully')
       await router.push({name: 'employees'})
     }
   } catch (e) {
@@ -74,9 +75,31 @@ const handleSubmit = async () => {
   }
 }
 
+const route = useRoute()
+const employeeId = parseInt(route.params.id)
+const getEmployeeById = async (id) => {
+  try {
+    isLoading.value = true
+    const response = await EmployeeService.getEmployeeById(id)
+    if (response) {
+      formData.firstName.val = response.firstName
+      formData.lastName.val = response.lastName
+      formData.department.val = response.department.id
+      formData.hireDate = response.hireDate
+      formData.email = response.email
+    }
+  } catch (e) {
+    await router.push({name: 'employees'})
+    throw e;
+  } finally {
+    isLoading.value = false
+  }
+}
+
 const departmentStore = useDepartmentStore()
 onMounted(async () => {
   await departmentStore.getDepartments()
+  await getEmployeeById(employeeId)
 })
 </script>
 
@@ -84,10 +107,13 @@ onMounted(async () => {
   <transition appear>
     <app-card>
       <template #header>
-        <h5>Create Employee</h5>
+        <h5>Update Employee</h5>
       </template>
 
-      <form @submit.prevent="handleSubmit">
+      <div class="text-center" v-if="isLoading">
+        <app-spinner :is-loading="isLoading"/>
+      </div>
+      <form v-else @submit.prevent="handleSubmit">
         <div class="mb-3">
           <!--      <label class="form-label" for="first-name">First name</label>-->
           <!--      <input type="text" id="first-name" class="form-control form-control-sm" />-->
@@ -163,30 +189,4 @@ onMounted(async () => {
   </transition>
 </template>
 
-<style scoped>
-/*
-.v-enter-from {
-  opacity: 0;
-  transform: translateY(-30px);
-}
-
-.v-leave-to {
-  opacity: 0;
-  transform: translateY(30px);
-}
-
-.v-enter-active {
-  transition: all 0.3s ease-out;
-}
-
-.v-leave-active {
-  transition: all 0.3s ease-in;
-}
-
-.v-enter-to,
-.v-leave-from {
-  opacity: 1;
-  transform: translateY(0);
-}
-*/
-</style>
+<style scoped></style>
