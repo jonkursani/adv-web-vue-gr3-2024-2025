@@ -5,16 +5,18 @@ import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import "./assets/app.css";
 import "./assets/main.css";
 
-import { createApp } from "vue";
+import {createApp} from "vue";
 import App from "./App.vue";
 import ChildComp from "@/components/ChildComp.vue";
 import router from "./router";
-import { createPinia } from "pinia";
+import {createPinia} from "pinia";
+import i18n from "@/locales/i18n.js";
 
 createApp(App)
-  // importi global i komponentit ChildComp
-  // emri ne html eshte parametri i pare, parametri i dyte eshte komponenti
-  // .component("ChildComp", ChildComp)
-  .use(router)
-  .use(createPinia())
-  .mount("#app");
+    // importi global i komponentit ChildComp
+    // emri ne html eshte parametri i pare, parametri i dyte eshte komponenti
+    // .component("ChildComp", ChildComp)
+    .use(router)
+    .use(createPinia())
+    .use(i18n)
+    .mount("#app");

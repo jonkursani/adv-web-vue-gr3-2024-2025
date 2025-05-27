@@ -8,6 +8,10 @@ import {useAuthStore} from "@/stores/authStore.js";
 import DepartmentRoutes from "@/router/departmentRoutes.js";
 import TodoRoutes from "@/router/todoRoutes.js";
 import EmployeeRoutes from "@/router/employeeRoutes.js";
+import AdminView from "@/views/AdminView.vue";
+import {ROLES} from "@/composables/useAdministration.js";
+import ManagerView from "@/views/ManagerView.vue";
+import AccessDeniedView from "@/views/AccessDeniedView.vue";
 
 const routes = [
     {
@@ -50,6 +54,30 @@ const routes = [
     ...TodoRoutes,
     ...DepartmentRoutes,
     ...EmployeeRoutes,
+    {
+        path: "/admin",
+        name: 'admin',
+        component: AdminView,
+        meta: {
+            requiresAuth: true,
+            roles: [ROLES.ADMIN]
+        }
+    },
+    {
+        path: '/manager',
+        name: 'manager',
+        component: ManagerView,
+        meta: {
+            requiresAuth: true,
+            roles: [ROLES.MANAGER, ROLES.ADMIN]
+        }
+    },
+    {
+        path: "/access-denied",
+        name: 'access-denied',
+        component: AccessDeniedView,
+        meta: {requiresAuth: true}
+    },
     // catch-all route
     {
         path: "/:notFound(.*)",
@@ -75,6 +103,19 @@ router.beforeEach((to, from) => {
     // next();
 
     const authStore = useAuthStore();
+
+    // nese routa ka roles te caktuara dhe useri osht logged in
+    // kontrollojme nese useri ka rolin e duhur
+    // ne kete rast, nese useri nuk ka rolin e duhur, e ridirektojm te access-denied
+    if (to.meta.roles && to.meta.roles.length > 0 && authStore.isLoggedIn) {
+        const isAllowed = to.meta.roles.includes(authStore.loggedInUser?.role)
+
+        if (!isAllowed) {
+            return {
+                name: 'access-denied',
+            }
+        }
+    }
 
     if (to.meta.requiresAuth && !authStore.isLoggedIn) {
         return {

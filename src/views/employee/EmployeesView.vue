@@ -6,6 +6,8 @@ import EmployeeService from "@/services/employeeService.js";
 import AppDatatable from "@/components/ui/AppDatatable.vue";
 import AppButton from "@/components/ui/AppButton.vue";
 import {useAppToast} from "@/composables/useAppToast.js";
+import {useAdministration} from "@/composables/useAdministration.js";
+import {useI18n} from "vue-i18n";
 // import DataTable from 'datatables.net-vue3';
 // import DataTablesCore from 'datatables.net';
 // import DataTablesBS5 from 'datatables.net-bs5';
@@ -67,19 +69,29 @@ const onDeleteEmployee = async (id) => {
   }
 }
 
+const {isAdmin} = useAdministration()
 onMounted(async () => {
   await loadEmployees()
   // new DataTablesCore('#employees')
 })
+
+const apiUrl = import.meta.env.VITE_API_URL
+
+const {t} = useI18n()
 </script>
 
 <template>
   <transition appear>
     <app-card>
       <template #header>
+        {{ apiUrl }}
+        {{ t('common.title') }}
         <div class="d-flex justify-content-between">
-          <h5>Employees</h5>
-          <router-link :to="{name: 'create-employee'}" class="btn btn-primary">Add</router-link>
+<!--          <h5>Employees</h5>-->
+          <h5>{{ t('employee.title') }}</h5>
+          <router-link :to="{name: 'create-employee'}" class="btn btn-primary">
+            {{ t('buttons.add') }}
+          </router-link>
         </div>
       </template>
 
@@ -126,7 +138,9 @@ onMounted(async () => {
           <!--        <app-button class="btn btn-danger ms-2" @click="() => console.log(variabla.rreshti)">Delete</app-button>-->
           <app-button
               class="btn btn-danger ms-2"
-              @click="onDeleteEmployee(rreshti.id)">
+              @click="onDeleteEmployee(rreshti.id)"
+              v-if="isAdmin"
+          >
             Delete
           </app-button>
         </template>
