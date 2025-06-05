@@ -10,7 +10,8 @@ import AppSpinner from "@/components/AppSpinner.vue";
 
 const formData = reactive({
   name: {val: '', isValid: true},
-  location: ''
+  location: '',
+  image: null
 })
 
 const formIsValid = ref(true)
@@ -41,8 +42,14 @@ const handleSubmit = async () => {
     location: formData.location
   }
 
+  const fd = new FormData();
+  fd.append('data', new Blob([JSON.stringify(obj)], {type: 'application/json'}));
+  if (formData.image) {
+    fd.append('image', formData.image);
+  }
+
   await withLoading(async () => {
-    const response = await DepartmentService.updateDepartment(departmentId, obj)
+    const response = await DepartmentService.updateDepartment(departmentId, fd)
     if (response) {
       showSuccess('Department updated successfully')
       await router.push({name: 'departments'})
@@ -50,14 +57,20 @@ const handleSubmit = async () => {
   })
 }
 
+const oldImg = ref(null)
 const getDepartmentById = async (id) => {
   await withLoading(async () => {
     const response = await DepartmentService.getDepartmentById(id);
     if (response) {
       formData.name.val = response.name;
       formData.location = response.location;
+      oldImg.value = response.imagePath;
     }
   })
+}
+
+const getFullImageUrl = (path) => {
+  return import.meta.env.VITE_IMG_URL + path
 }
 
 const route = useRoute()
@@ -94,6 +107,26 @@ onMounted(async () => {
                id="location"
                class="form-control"
                v-model.trim="formData.location"/>
+      </div>
+
+      <div class="mb-3">
+        <div v-if="oldImg" class="d-flex">
+          <label class="form-label me-5">Current image:</label>
+          <img
+              :src="getFullImageUrl(oldImg)"
+              :alt="`Department ${formData.name.val}`"
+              class="img-fluid"
+              style="max-width: 300px"
+          >
+        </div>
+
+        <label for="image" class="form-label">Image</label>
+        <input
+            type="file"
+            id="image"
+            class="form-control"
+            @change="e => formData.image = e.target.files[0]"
+        />
       </div>
 
       <div class="text-center">

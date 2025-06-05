@@ -9,7 +9,8 @@ import {useRouter} from "vue-router";
 
 const formData = reactive({
   name: {val: '', isValid: true},
-  location: ''
+  location: '',
+  image: null
 })
 
 const formIsValid = ref(true)
@@ -40,8 +41,19 @@ const handleSubmit = async () => {
     location: formData.location
   }
 
+  const fd = new FormData();
+  fd.append('data', new Blob([JSON.stringify(obj)], { type: 'application/json' }))
+  if (formData.image) {
+    fd.append('image', formData.image);
+  }
+
+  // console.log('FormData:', fd);
+  // for (const pair of fd.entries()) {
+  //   console.log(pair[0], pair[1]);
+  // }
+
   await withLoading(async () => {
-    const response = await DepartmentService.createDepartment(obj)
+    const response = await DepartmentService.createDepartment(fd)
     if (response) {
       showSuccess('Department created successfully')
       await router.push({name: 'departments'})
@@ -74,6 +86,14 @@ const handleSubmit = async () => {
                id="location"
                class="form-control"
                v-model.trim="formData.location"/>
+      </div>
+
+      <div class="mb-3">
+        <label for="image" class="form-label">Image</label>
+        <input type="file"
+               id="image"
+               class="form-control"
+               @change="e => formData.image = e.target.files[0]"/>
       </div>
 
       <div class="text-center">

@@ -8,7 +8,11 @@ class DepartmentService {
     }
 
     async createDepartment(department) {
-        const response = await client.post('departments', department)
+        const response = await client.post('departments', department, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
         return response.status === 201 ? response.data : null
     }
 
@@ -18,7 +22,11 @@ class DepartmentService {
     }
 
     async updateDepartment(id, department) {
-        const response = await client.put(`departments/${id}`, department)
+        const response = await client.put(`departments/${id}`, department, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
         return response.status === 200 ? response.data : null
     }
 

@@ -47,6 +47,10 @@ const onDeleteDepartment = async (id) => {
   }
 }
 
+const getFullImageUrl = (path) => {
+  return import.meta.env.VITE_IMG_URL + path
+}
+
 onMounted(async () => {
   await loadDepartments()
   new DataTablesCore('#departments')
@@ -72,6 +76,7 @@ onMounted(async () => {
         <th>#</th>
         <th>Name</th>
         <th>Location</th>
+        <th>Image</th>
         <th>Actions</th>
       </tr>
       </thead>
@@ -80,6 +85,14 @@ onMounted(async () => {
         <td>{{ dep.id }}</td>
         <td>{{ dep.name }}</td>
         <td>{{ dep.location }}</td>
+        <td>
+          <img
+              v-if="dep.imagePath"
+              :src="getFullImageUrl(dep.imagePath)"
+              :alt="`Image of ${dep.name}`"
+              style="max-width: 300px"
+          />
+        </td>
         <td>
           <router-link :to="{name: 'update-department', params: {id: dep.id}}" class="btn btn-secondary">
             Update
